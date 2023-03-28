@@ -12,7 +12,7 @@ httpx
 idna
 itsdangerous
 Jinja2
-python-jose
+python-jose==3.3.0
 MarkupSafe
 orjson
 passlib
