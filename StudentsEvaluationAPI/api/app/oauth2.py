@@ -15,7 +15,7 @@ student_oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/student/sign-in")
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
 ALGORITHM = os.environ.get('ALGORITHM')
-ACCESS_TOKEN_EXPIRE_MINUTES = os.environ.get('ACCESS_TOK_EXPIRE_MINUTES')
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.environ.get('ACCESS_TOK_EXPIRE_MINUTES'))
 
 credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,

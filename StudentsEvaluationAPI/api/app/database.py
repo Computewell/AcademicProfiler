@@ -5,16 +5,15 @@ import cloudinary
 import os
 
 cloudinary.config(
-    cloud_name = os.environ.get('cloudinary_cloud_name'),
-    api_key = os.environ.get('cloudinary_api_key'),
-    api_secret = os.environ.get('cloudinary_api_secret'),
+    cloud_name=os.environ.get('cloudinary_cloud_name'),
+    api_key=os.environ.get('cloudinary_api_key'),
+    api_secret=os.environ.get('cloudinary_api_secret'),
     secure=True
 )
 
 SQLALCHEMY_DATABASE_URL = os.environ.get('DATABASE_URI')
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
 
 Base = declarative_base()
 
