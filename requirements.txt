@@ -8,7 +8,7 @@ greenlet
 h11
 httpcore==0.17.0
 httptools
-httpx
+httpx==0.23.3
 idna
 itsdangerous
 Jinja2
