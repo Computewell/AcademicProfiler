@@ -1,10 +1,10 @@
-import os
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
 from . import schemas, database, models
 from fastapi import Depends, status, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
+from .config import settings
 
 
 admin_oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/administrator/sign-in")
@@ -13,9 +13,9 @@ teacher_oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/teacher/sign-in")
 student_oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/student/sign-in")
 
 
-SECRET_KEY = os.environ.get('SECRET_KEY')
-ALGORITHM = os.environ.get('ALGORITHM')
-ACCESS_TOKEN_EXPIRE_MINUTES = int(os.environ.get('ACCESS_TOK_EXPIRE_MINUTES'))
+SECRET_KEY = settings.secret_key
+ALGORITHM = settings.algorithm
+ACCESS_TOKEN_EXPIRE_MINUTES = settings.access_tok_expire_minutes
 
 credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
