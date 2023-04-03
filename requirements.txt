@@ -71,7 +71,7 @@ email-validator
 fastapi==0.95.0
 greenlet
 h11
-httpcore==0.17.0
+httpcore
 httptools
 httpx==0.23.3
 idna
