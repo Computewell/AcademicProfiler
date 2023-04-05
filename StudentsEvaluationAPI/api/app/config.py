@@ -1,21 +1,18 @@
-from pydantic import BaseSettings
+import os
 
 
-class Settings(BaseSettings):
-    db_hostname: str
-    db_port: str
-    db_password: str
-    db_username: str
-    db_name: str
-    secret_key: str
-    algorithm: str
-    access_tok_expire_minutes: int
-    cloudinary_cloud_name: str
-    cloudinary_api_key: str
-    cloudinary_api_secret: str
-
-    class Config:
-        env_file = ".env"
+class Settings:
+    db_hostname: str = os.environ.get('O_DB_HOSTNAME')
+    db_port: str = os.environ.get('O_DB_PORT')
+    db_password: str = os.environ.get('O_DB_PASSWORD')
+    db_username: str = os.environ.get('O_DB_USERNAME')
+    db_name: str = os.environ.get('O_DB_NAME')
+    secret_key: str = os.environ.get('SECRET_KEY')
+    algorithm: str = os.environ.get('ALGORITHM')
+    access_tok_expire_minutes: int = os.environ.get('ACCESS_TOK_EXPIRE_MINUTES')
+    cloudinary_cloud_name: str = os.environ.get('O_CLOUDINARY_CLOUD_NAME')
+    cloudinary_api_key: str = os.environ.get('O_CLOUDINARY_API_KEY')
+    cloudinary_api_secret: str = os.environ.get('O_CLOUDINARY_API_SECRET')
 
 
 settings = Settings()

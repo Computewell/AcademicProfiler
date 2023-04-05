@@ -15,7 +15,7 @@ student_oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/student/sign-in")
 
 SECRET_KEY = settings.secret_key
 ALGORITHM = settings.algorithm
-ACCESS_TOKEN_EXPIRE_MINUTES = settings.access_tok_expire_minutes
+ACCESS_TOKEN_EXPIRE_MINUTES = int(settings.access_tok_expire_minutes)
 
 credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
