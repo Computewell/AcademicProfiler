@@ -53,7 +53,12 @@ def get_current_user(
         db: Session = Depends(database.get_db)
 ):
     token = verify_tok(token, credentials_exception)
-    user = db.query(models.Students).filter(models.Students.id == token.id).first()
+    user = db.query(models.Students).filter(models.Students.student_id == token.id).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="You are not authorized to execute this action"
+        )
     return user
 
 
@@ -62,7 +67,7 @@ def get_admin_user(
         db: Session = Depends(database.get_db)
 ):
     token = verify_tok(token, credentials_exception)
-    user = db.query(models.Admins).filter(models.Admins.id == token.id).first()
+    user = db.query(models.Admins).filter(models.Admins.email == token.id).first()
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -75,7 +80,7 @@ def get_teacher(
         db: Session = Depends(database.get_db)
 ):
     token = verify_tok(token, credentials_exception)
-    user = db.query(models.Teacher).filter(models.Teacher.id == token.id).first()
+    user = db.query(models.Teacher).filter(models.Teacher.name == token.id).first()
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

@@ -24,7 +24,7 @@ async def student_login(
         "name": user.name,
         "access_token": access_tok,
         "token_type": "bearer",
-        "id": user.id
+        "id": user.student_id
     }
 
 @router.post("/administrator/sign-in", response_model=schemas.UserLogin)
@@ -42,7 +42,7 @@ async def admin_login(
         "name": user.name,
         "access_token": access_token,
         "token_type": "bearer",
-        "id": user.id
+        "id": user.email
     }
 
 @router.post("/guardian/sign-in", response_model=schemas.UserLogin)
@@ -78,5 +78,5 @@ async def teacher_login(
         "name": user.name,
         "access_token": access_token,
         "token_type": "bearer",
-        "id": user.id
+        "id": user.name
     }
