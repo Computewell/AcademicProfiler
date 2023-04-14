@@ -5,12 +5,14 @@ from fastapi import Depends, status, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from .config import settings
+from .jwt_bearer import JWTBearer
 
 
-admin_oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/administrator/sign-in")
-parent_oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/guardian/sign-in")
-teacher_oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/teacher/sign-in")
-student_oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/student/sign-in")
+jwt_bearer = JWTBearer()
+# admin_oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/administrator/sign-in")
+# parent_oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/administrator/sign-in")
+# teacher_oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/administrator/sign-in")
+# student_oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/student/sign-in")
 
 
 SECRET_KEY = settings.secret_key
@@ -47,7 +49,7 @@ def verify_tok(token: str, credentialsException):
 
 
 def get_current_user(
-        token: str = Depends(student_oauth2_scheme),
+        token: str = Depends(jwt_bearer),
         db: Session = Depends(database.get_db)
 ):
     token = verify_tok(token, credentials_exception)
@@ -56,7 +58,7 @@ def get_current_user(
 
 
 def get_admin_user(
-        token: str = Depends(admin_oauth2_scheme),
+        token: str = Depends(jwt_bearer),
         db: Session = Depends(database.get_db)
 ):
     token = verify_tok(token, credentials_exception)
@@ -69,7 +71,7 @@ def get_admin_user(
     return user
 
 def get_teacher(
-        token: str = Depends(teacher_oauth2_scheme),
+        token: str = Depends(jwt_bearer),
         db: Session = Depends(database.get_db)
 ):
     token = verify_tok(token, credentials_exception)
@@ -83,7 +85,7 @@ def get_teacher(
 
 
 def get_guardian(
-        token: str = Depends(parent_oauth2_scheme),
+        token: str = Depends(jwt_bearer),
         db: Session = Depends(database.get_db)
 ):
     token = verify_tok(token, credentials_exception)
