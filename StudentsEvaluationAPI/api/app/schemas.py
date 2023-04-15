@@ -1,5 +1,5 @@
 from datetime import datetime, date
-from typing import Optional, List
+from typing import Optional, List, Any
 from pydantic import BaseModel, EmailStr, validator
 from StudentsEvaluationAPI import __SUBJECT_LISTS__, __CLASSES__, __TERM__
 from fastapi import HTTPException, status
@@ -211,15 +211,20 @@ class Parent(GuardianBase):
         orm_mode = True
 
 
-class UserLogin(BaseModel):
-    id: int
+class LoginBase(BaseModel):
     name: str
     access_token: str
     token_type: str = "bearer"
 
+class AdminLogin(LoginBase):
+    email: EmailStr
+
+class StudentLogin(LoginBase):
+    id: str
+
 
 class TokData(BaseModel):
-    id: Optional[str] = None
+    id: Optional[Any] = None
 
 
 class NewsBase(BaseModel):
