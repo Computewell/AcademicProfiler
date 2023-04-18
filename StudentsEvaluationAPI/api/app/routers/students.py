@@ -3,7 +3,6 @@ from fastapi import APIRouter, status, Depends, HTTPException
 from sqlalchemy.orm import Session
 from .. import schemas, database, models, utils, oauth2
 
-
 router = APIRouter(tags=["Students"], prefix="/student")
 
 
@@ -13,10 +12,11 @@ async def create_student(
         db: Session = Depends(database.get_db),
         role: models.Admins = Depends(oauth2.get_admin_user)
 ):
+    count = db.query(models.Students).count()
     hashed_pwd = utils.hashed(user.password)
     user.password = hashed_pwd
     new_user = models.Students(**user.dict())
-    new_user.studentID = utils.generate_registration_number()
+    new_user.student_id = utils.generate_registration_number(count + 1)
 
     teacher = db.query(models.Teacher).filter(models.Teacher.class_taught == user.student_class).first()
     if teacher:
@@ -41,6 +41,7 @@ async def delete_student(
     db.query(models.Students).where(models.Students.id == userID).delete()
     db.commit()
     return
+
 
 @router.put("/password", status_code=status.HTTP_200_OK)
 async def change_password(

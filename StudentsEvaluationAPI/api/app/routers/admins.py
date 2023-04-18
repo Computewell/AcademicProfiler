@@ -3,7 +3,6 @@ from sqlalchemy.orm import Session
 from .. import schemas, database, models, utils, oauth2
 from StudentsEvaluationAPI import __CLASSES__
 
-
 router = APIRouter(tags=["Administrators"], prefix="/admin")
 
 
@@ -20,12 +19,14 @@ async def create_admin(
     db.refresh(new_user)
     return new_user
 
+
 @router.get("/teachers", response_model=list[schemas.Teacher])
 async def get_all_teachers(
         db: Session = Depends(database.get_db),
         user: models.Admins = Depends(oauth2.get_admin_user)
 ):
     return db.query(models.Teacher).all()
+
 
 @router.get("/students", response_model=list[schemas.Students])
 async def get_all_students(
@@ -34,9 +35,11 @@ async def get_all_students(
 ):
     return db.query(models.Students).all()
 
+
 @router.get("/get-classes", response_model=list[str])
 async def get_all_classes(role: str = Depends(oauth2.get_admin_user)):
     return __CLASSES__
+
 
 @router.get("/{member_class}/members", response_model=list[str])
 async def get_class_members(
@@ -68,6 +71,7 @@ async def get_class_members(
 
     return ret_val
 
+
 @router.get("/user-profile/{member}/{member_class}/{name}", response_model=schemas.Member)
 async def get_user_profile(
         member_class: str, member: str, name: str,
@@ -94,7 +98,7 @@ async def get_user_profile(
         ).first()
 
         if not teachers:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,  detail=f"{member} with name {name} not found")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"{member} with name {name} not found")
 
         for k, v in teachers.__dict__.items():
             ret_val[k] = v
