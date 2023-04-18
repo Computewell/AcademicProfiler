@@ -46,16 +46,21 @@ async def validate_file(file: UploadFile, max_size: int = None, mime_types: list
     return file
 
 
-# def generate_suffix():
-#     # Generate a random 4 digit suffix
-#     suffix = uuid.uuid4().int % 1000
-#     # Pad the suffix with zeros to ensure it is at least 4 digits long
-#     suffix = str(suffix).zfill(3)
-#     return suffix
+def generate_suffix(val):
+    # Generate a random 4 digit suffix
+    # suffix = uuid.uuid4().int % 1000
+    # Pad the suffix with zeros to ensure it is at least 4 digits long
+    suffix = str(val).zfill(3)
+    return suffix
 
 
 # Generate the complete matriculation number
-def generate_registration_number(val: int):
-    # suffix = generate_suffix()
+def generate_registration_number(role, val: int):
+    suffix = generate_suffix(val)
     year = datetime.now().year % 100
-    return f"STU{year}{val}"
+    if role == "STU":
+        return f"STU{year}{suffix}"
+    elif role == "ADM":
+        return f"ADM{suffix}"
+    elif role == "TCH":
+        return f"TCH{year}{suffix}"

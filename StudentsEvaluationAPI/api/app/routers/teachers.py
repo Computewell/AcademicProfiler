@@ -17,6 +17,8 @@ async def create_teacher(
     sub_taught = user.subject_taught
     del user.subject_taught
     new_user = models.Teacher(**user.dict())
+    count = db.query(models.Teacher).count()
+    new_user.teacher_id = utils.generate_registration_number("TCH", count + 1)
     db.add(new_user)
     db.commit()
 

@@ -14,6 +14,8 @@ async def create_admin(
     hashed_pwd = utils.hashed(user.password)
     user.password = hashed_pwd
     new_user = models.Admins(**user.dict())
+    count = db.query(models.Admins).count()
+    new_user.admin_id = utils.generate_registration_number("ADM", count + 1)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)

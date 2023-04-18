@@ -2,28 +2,28 @@ from jose import JWTError, jwt
 from datetime import datetime, timedelta
 from . import schemas, database, models
 from fastapi import Depends, status, HTTPException
-from fastapi.security import OAuth2PasswordBearer
+# from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from .config import settings
-from .jwt_bearer import JWTBearer
+# from .jwt_bearer import JWTBearer
+from fastapi.security import OAuth2PasswordBearer
 
-
-jwt_bearer = JWTBearer()
+# jwt_bearer = JWTBearer()
 # admin_oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/administrator/sign-in")
 # parent_oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/administrator/sign-in")
 # teacher_oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/administrator/sign-in")
 # student_oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/student/sign-in")
-
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token/sign-in")
 
 SECRET_KEY = settings.secret_key
 ALGORITHM = settings.algorithm
 ACCESS_TOKEN_EXPIRE_MINUTES = int(settings.access_tok_expire_minutes)
 
 credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail=f"Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"}
-    )
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail=f"Could not validate credentials",
+    headers={"WWW-Authenticate": "Bearer"}
+)
 
 
 def create_access_token(data: dict):
@@ -49,7 +49,7 @@ def verify_tok(token: str, credentialsException):
 
 
 def get_current_user(
-        token: str = Depends(jwt_bearer),
+        token: str = Depends(oauth2_scheme),
         db: Session = Depends(database.get_db)
 ):
     token = verify_tok(token, credentials_exception)
@@ -63,11 +63,11 @@ def get_current_user(
 
 
 def get_admin_user(
-        token: str = Depends(jwt_bearer),
+        token: str = Depends(oauth2_scheme),
         db: Session = Depends(database.get_db)
 ):
     token = verify_tok(token, credentials_exception)
-    user = db.query(models.Admins).filter(models.Admins.email == token.id).first()
+    user = db.query(models.Admins).filter(models.Admins.admin_id == token.id).first()
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -75,12 +75,13 @@ def get_admin_user(
         )
     return user
 
+
 def get_teacher(
-        token: str = Depends(jwt_bearer),
+        token: str = Depends(oauth2_scheme),
         db: Session = Depends(database.get_db)
 ):
     token = verify_tok(token, credentials_exception)
-    user = db.query(models.Teacher).filter(models.Teacher.name == token.id).first()
+    user = db.query(models.Teacher).filter(models.Teacher.teacher_id == token.id).first()
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -90,16 +91,14 @@ def get_teacher(
 
 
 def get_guardian(
-        token: str = Depends(jwt_bearer),
+        token: str = Depends(oauth2_scheme),
         db: Session = Depends(database.get_db)
 ):
     token = verify_tok(token, credentials_exception)
-    user = db.query(models.Admins).filter(models.Guardians.id == token.id).first()
+    user = db.query(models.Admins).filter(models.Guardians.email == token.id).first()
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="You are not authorized to execute this action"
         )
     return user
-
-

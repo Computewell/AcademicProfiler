@@ -2,7 +2,6 @@ from fastapi import APIRouter, status, Depends, HTTPException
 from sqlalchemy.orm import Session
 from .. import schemas, database, models, utils, oauth2
 
-
 router = APIRouter(tags=["Guardians"], prefix="/guardian")
 
 
@@ -19,15 +18,15 @@ async def create_guardian(
     db.add(new_user)
 
     for _id in children:
-        print(new_user.id)
         db.query(models.Students).filter(
-            models.Students.studentID == _id
+            models.Students.student_id == _id
         ).update({"parent_id": new_user.id}, synchronize_session=False)
         db.commit()
 
     db.commit()
     db.refresh(new_user)
     return new_user
+
 
 @router.delete("/{userID}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_guardian(
@@ -37,6 +36,7 @@ async def delete_guardian(
     db.query(models.Guardians).where(models.Guardians.id == userID).delete()
     db.commit()
     return
+
 
 @router.put("/password", status_code=status.HTTP_200_OK)
 async def change_password(
@@ -52,6 +52,7 @@ async def change_password(
     db.commit()
     db.refresh(user)
     return {"message": "Password updated successfully"}
+
 
 @router.get("/", response_model=list[schemas.Guardian])
 async def get_all_parents(

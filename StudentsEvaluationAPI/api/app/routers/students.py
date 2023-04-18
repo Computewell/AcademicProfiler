@@ -16,7 +16,7 @@ async def create_student(
     hashed_pwd = utils.hashed(user.password)
     user.password = hashed_pwd
     new_user = models.Students(**user.dict())
-    new_user.student_id = utils.generate_registration_number(count + 1)
+    new_user.student_id = utils.generate_registration_number("STU", count + 1)
 
     teacher = db.query(models.Teacher).filter(models.Teacher.class_taught == user.student_class).first()
     if teacher:

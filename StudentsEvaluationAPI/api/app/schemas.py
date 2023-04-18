@@ -52,9 +52,11 @@ class PostGrade(BaseModel):
     c_a_score: Optional[float] = 0.0
     exam_score: Optional[float] = 0.0
 
+
 class Session(BaseModel):
     session: str
     term: Term
+
 
 class StudentsBase(BaseModel):
     firstname: str
@@ -99,6 +101,7 @@ class StudentSubject(BaseModel):
     class Config:
         orm_mode = True
 
+
 class Member(BaseModel):
     id: int
     Designation: str
@@ -140,6 +143,7 @@ class TeacherUpdate(BaseModel):
 
 class Teacher(TeacherBase):
     id: int
+    teacher_id: str
     class_taught: Optional[str]
 
     class Config:
@@ -216,11 +220,18 @@ class LoginBase(BaseModel):
     access_token: str
     token_type: str = "bearer"
 
+
 class AdminLogin(LoginBase):
     email: EmailStr
 
+
 class StudentLogin(LoginBase):
     id: str
+
+
+class UserLogin(LoginBase):
+    id: str
+    role: str
 
 
 class TokData(BaseModel):

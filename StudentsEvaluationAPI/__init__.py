@@ -15,3 +15,7 @@ __SUBJECT_LISTS__ = [
 ]
 
 __TERM__ = ["1st Term", "2nd Term", "3rd Term"]
+
+__GENDER__ = ["Male", "Female"]
+
+

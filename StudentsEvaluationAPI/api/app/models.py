@@ -50,6 +50,7 @@ class Teacher(Base):
     title = Column(String, nullable=False)
     name = Column(String, nullable=False)
     email = Column(String, nullable=False, unique=True)
+    teacher_id = Column(String, nullable=False, unique=True)
     gender = Column(String, nullable=False)
     address = Column(String, nullable=False)
     mobile_no = Column(String, nullable=False)
@@ -71,6 +72,7 @@ class Admins(Base):
     name = Column(String, nullable=False)
     email = Column(String, nullable=False, unique=True)
     password = Column(String, nullable=False)
+    admin_id = Column(String, nullable=False, unique=True)
     reg_date = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()"))
 
     news_article = relationship("News", back_populates="owner", cascade="all, delete", passive_deletes=True)
