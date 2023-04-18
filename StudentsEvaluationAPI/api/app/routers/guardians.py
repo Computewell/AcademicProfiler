@@ -21,7 +21,7 @@ async def create_guardian(
     for _id in children:
         print(new_user.id)
         db.query(models.Students).filter(
-            models.Students.studentID == _id
+            models.Students.student_id == _id
         ).update({"parent_id": new_user.id}, synchronize_session=False)
         db.commit()
 
