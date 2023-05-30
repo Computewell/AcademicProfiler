@@ -1,3 +1,30 @@
+"""
+Module Description
+
+This module defines the authentication endpoints for user login. It provides functionality for
+verifying user credentials and generating access tokens.
+
+Dependencies:
+- fastapi: FastAPI framework for building APIs
+- Response: FastAPI Response class for handling HTTP responses
+- HTTPException: FastAPI HTTPException class for raising exceptions with status codes
+- status: HTTP status codes module for specifying response status codes
+- Depends: FastAPI Dependency class for handling dependencies
+- models: Module containing ORM models for database tables
+- schemas: Module containing data models (schemas) for API request/response bodies
+- utils: Module containing utility functions
+- oauth2: Module for handling OAuth2 authentication
+
+Exposed Endpoints:
+- POST /auth/token/sign-in: User login and access token generation
+
+Tags:
+- Authentications: Tag for the authentication-related endpoints
+
+Prefix:
+- /auth: Prefix for all authentication-related endpoints
+"""
+
 from fastapi import APIRouter, Response, HTTPException, status, Depends
 from .. import models, schemas, utils, oauth2
 from ..database import get_db
@@ -9,10 +36,27 @@ router = APIRouter(tags=["Authentications"], prefix="/auth")
 
 @router.post("/token/sign-in", response_model=schemas.UserLogin)
 async def user_login(
-        res: Response,
-        usr_credentials: OAuth2PasswordRequestForm = Depends(),
-        db: Session = Depends(get_db)
+    res: Response,
+    usr_credentials: OAuth2PasswordRequestForm = Depends(),
+    db: Session = Depends(get_db)
 ):
+    """
+    User Login
+
+    Authenticates the user based on the provided credentials and generates an access token.
+
+    Parameters:
+    - res (Response): FastAPI Response object for setting cookies and returning the response.
+    - usr_credentials (OAuth2PasswordRequestForm): Form containing user credentials (username and password).
+    - db (Session): SQLAlchemy Session object for database operations.
+
+    Returns:
+    - dict: Dictionary containing user information and access token.
+
+    Raises:
+    - HTTPException(403): If the login credentials are invalid.
+
+    """
     res_role = "parent"
     if usr_credentials.username.startswith("ADM"):
         res_role = "admin"

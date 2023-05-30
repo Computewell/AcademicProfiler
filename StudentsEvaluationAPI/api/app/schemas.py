@@ -1,3 +1,59 @@
+"""
+Module Name: Schemas
+
+This module defines the data schemas used in the StudentsEvaluationAPI application.
+
+Classes:
+    - Subject: Custom string class representing a subject. Validates against a list of valid subjects.
+    - Term: Custom string class representing a term. Validates against a list of valid terms.
+    - Classes: Custom string class representing a student class. Validates against a list of valid classes.
+    - Results: Data schema representing the results of a student's subject.
+    - PostGrade: Data schema representing the grades to be posted for a student.
+    - Session: Data schema representing a session and term.
+    - StudentsBase: Base data schema representing common fields for student data.
+    - StudentsCreate: Data schema representing the creation of a student.
+    - StudentsUpdate: Data schema representing the update of student data.
+    - Students: Data schema representing a student.
+    - StudentSubject: Data schema representing a student's subject.
+    - Member: Data schema representing a member (teacher, admin, etc.).
+    - TeacherBase: Base data schema representing common fields for teacher data.
+    - TeacherCreate: Data schema representing the creation of a teacher.
+    - TeacherUpdate: Data schema representing the update of teacher data.
+    - Teacher: Data schema representing a teacher.
+    - UpdatePassword: Data schema representing the update of a user's password.
+    - AdminBase: Base data schema representing common fields for administrator data.
+    - AdministratorCreate: Data schema representing the creation of an administrator.
+    - AdministratorUpdate: Data schema representing the update of administrator data.
+    - Admin: Data schema representing an administrator.
+    - GuardianBase: Base data schema representing common fields for guardian data.
+    - GuardianCreate: Data schema representing the creation of a guardian.
+    - Guardian: Data schema representing a guardian.
+    - Parent: Data schema representing a parent.
+    - LoginBase: Base data schema representing common fields for login data.
+    - AdminLogin: Data schema representing the login of an admin.
+    - StudentLogin: Data schema representing the login of a student.
+    - UserLogin: Data schema representing the login of a user.
+    - TokData: Data schema representing token data.
+    - NewsBase: Base data schema representing common fields for news data.
+    - PostNews: Data schema representing the creation of news.
+    - UpdateNews: Data schema representing the update of news data.
+    - News: Data schema representing news.
+
+Dependencies:
+    - datetime.datetime: Provides classes for working with dates and times.
+    - typing.Optional: Optional type hints.
+    - typing.List: List type hints.
+    - pydantic.BaseSchema: Base class for data schemas with validation and serialization capabilities.
+    - pydantic.EmailStr: Data schema representing a validated email string.
+    - pydantic.validator: Decorator for adding validation functions to schema fields.
+    - StudentsEvaluationAPI.__SUBJECT_LISTS__: List of valid subjects.
+    - StudentsEvaluationAPI.__CLASSES__: List of valid classes.
+    - StudentsEvaluationAPI.__TERM__: List of valid terms.
+    - fastapi.HTTPException: Exception class for HTTP-specific exceptions.
+    - fastapi.status: Provides HTTP status codes.
+"""
+
+
 from datetime import datetime, date
 from typing import Optional, List, Any
 from pydantic import BaseModel, EmailStr, validator

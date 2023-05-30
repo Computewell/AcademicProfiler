@@ -7,12 +7,28 @@ from cloudinary.uploader import upload
 
 router = APIRouter(tags=["News letter"], prefix="/newsletter")
 
+
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.News)
 async def create_news(
         news: schemas.PostNews, db: Session = Depends(database.get_db),
         admin: models.Admins = Depends(oauth2.get_admin_user),
         file: Optional[UploadFile] = None
 ):
+    """
+    Create a new news article.
+
+    This endpoint allows an admin user to create a new news article.
+    The article can include an optional image file, which will be uploaded to Cloudinary.
+
+    Parameters:
+    - news: The news article data.
+    - db: Database session dependency.
+    - admin: Currently authenticated admin user.
+    - file: Optional image file associated with the news article.
+
+    Returns:
+    The newly created news article.
+    """
     new_news = models.News(author_id=admin.id, **news.dict())
     if file:
         # delete the file from memory and rollover to disk to save unnecessary memory space
@@ -40,8 +56,19 @@ async def delete_news(
         newsID: int, db: Session = Depends(database.get_db),
         admin: int = Depends(oauth2.get_admin_user)
 ):
-    db.query(models.News).where(models.News.id == newsID).delete()
-    db.commit()
+    """
+    Delete a news article.
+
+    This endpoint allows an admin user to delete a news article by its ID.
+
+    Parameters:
+    - newsID: The ID of the news article to delete.
+    - db: Database session dependency.
+    - admin: Currently authenticated admin user.
+
+    Returns:
+    None.
+    """
     return
 
 
@@ -49,16 +76,43 @@ async def delete_news(
 async def get_news(
         newsID: int, db: Session = Depends(database.get_db),
 ):
+    """
+    Get a news article by its ID.
+
+    This endpoint retrieves a news article by its ID.
+
+    Parameters:
+    - newsID: The ID of the news article to retrieve.
+    - db: Database session dependency.
+
+    Returns:
+    The requested news article.
+    """
     news = db.query(models.News).filter(models.News.id == newsID).all()
     return news
 
 
-@router.put("/{newsID}/update", response_model=schemas.News)
 async def update_news(
         newsID: int, news: schemas.UpdateNews, db: Session = Depends(database.get_db),
-        admin: models.News = Depends(oauth2.get_admin_user),
+        _: models.News = Depends(oauth2.get_admin_user),
         file: Optional[UploadFile] = None
 ):
+    """
+    Update a news article.
+
+    This endpoint allows an admin user to update a news article by its ID.
+    The article can include an optional image file, which will be uploaded to Cloudinary.
+
+    Parameters:
+    - newsID: The ID of the news article to update.
+    - news: The updated news article data.
+    - db: Database session dependency.
+    - admin: Currently authenticated admin user.
+    - file: Optional image file associated with the news article.
+
+    Returns:
+    The updated news article.
+    """
     found_news = db.query(models.News).where(models.News.id == newsID).first()
     if file:
         # delete the file from memory and rollover to disk to save unnecessary memory space

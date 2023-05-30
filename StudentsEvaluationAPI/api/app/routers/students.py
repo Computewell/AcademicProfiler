@@ -12,6 +12,23 @@ async def create_student(
         db: Session = Depends(database.get_db),
         role: models.Admins = Depends(oauth2.get_admin_user)
 ):
+    """
+    Register a new student.
+
+    This endpoint allows an admin user to register a new student.
+    The student's password will be hashed before storing it in the database.
+    The student will be assigned a unique student ID based on the current count of students in the database.
+    The student can optionally be associated with a parent and a teacher.
+
+    Parameters:
+    - user: The student data.
+    - parentID: Optional ID of the parent associated with the student.
+    - db: Database session dependency.
+    - role: Currently authenticated admin user.
+
+    Returns:
+    The newly registered student.
+    """
     count = db.query(models.Students).count()
     hashed_pwd = utils.hashed(user.password)
     user.password = hashed_pwd
@@ -38,6 +55,19 @@ async def delete_student(
         userID: int, db: Session = Depends(database.get_db),
         user: models.Admins = Depends(oauth2.get_admin_user)
 ):
+    """
+    Delete a student.
+
+    This endpoint allows an admin user to delete a student by its ID.
+
+    Parameters:
+    - userID: The ID of the student to delete.
+    - db: Database session dependency.
+    - user: Currently authenticated admin user.
+
+    Returns:
+    None.
+    """
     db.query(models.Students).where(models.Students.id == userID).delete()
     db.commit()
     return
@@ -49,6 +79,21 @@ async def change_password(
         user: models.Admins = Depends(oauth2.get_current_user),
         db: Session = Depends(database.get_db)
 ):
+    """
+    Change the password of an admin user.
+
+    This endpoint allows an admin user to change their own password.
+    The old password must be provided for verification.
+    The new password and password confirmation must match.
+
+    Parameters:
+    - form_data: The password update data.
+    - user: Currently authenticated admin user.
+    - db: Database session dependency.
+
+    Returns:
+    A message indicating the success of the password update.
+    """
     if not utils.verify(form_data.old_password, user.password):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Incorrect password")
     if form_data.new_password != form_data.password:
